@@ -10,6 +10,10 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: 
+        variant: [ api, web ]
     permissions:
       contents: read
       packages: write
@@ -40,7 +44,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          tags: type=raw,value=develop
+          tags: type=raw,value=${{ matrix.variant }}-develop
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
@@ -49,6 +53,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
+          target: ${{ matrix.variant }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

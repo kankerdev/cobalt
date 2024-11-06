@@ -10,6 +10,10 @@ env:
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: 
+        variant: [ api, web ]
     permissions:
       contents: read
       packages: write
@@ -41,10 +45,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           tags: |
-            type=raw,value=latest
-            type=raw,value=${{ steps.release-meta.outputs.version }}
-            type=raw,value=${{ steps.release-meta.outputs.major_version }}
-            type=raw,value=${{ steps.release-meta.outputs.version }}-${{ steps.release-meta.outputs.commit_short }}
+            type=raw,value=${{ matrix.variant }}
+            type=raw,value=${{ matrix.variant }}-${{ steps.release-meta.outputs.version }}
+            type=raw,value=${{ matrix.variant }}-${{ steps.release-meta.outputs.major_version }}
+            type=raw,value=${{ matrix.variant }}-${{ steps.release-meta.outputs.version }}-${{ steps.release-meta.outputs.commit_short }}
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
@@ -53,6 +57,7 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
+          target: ${{ matrix.variant }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

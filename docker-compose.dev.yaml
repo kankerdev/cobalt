@@ -1,0 +1,26 @@
+name: cobalt
+
+services:
+  web: &base
+    container_name: cobalt_web
+    build: 
+      target: web
+      context: .
+      dockerfile: Dockerfile
+      args: 
+        - WEB_HOST=localhost:8080
+        - WEB_DEFAULT_API=http://localhost:9000
+    ports: 
+      - 8080:80/tcp
+
+  api: 
+    <<: *base
+    container_name: cobalt_api
+    init: true
+    read_only: true
+    build: 
+      target: api
+    ports: 
+      - 9000:9000/tcp
+    environment:
+      - API_URL=http://localhost:9000
