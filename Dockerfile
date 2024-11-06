@@ -19,6 +19,7 @@ RUN pnpm deploy --filter=@imput/cobalt-api --prod /prod/api
 
 
 FROM base AS api
+ENV API_URL="https://cobalt-api.kanker.dev"
 WORKDIR /app
 
 COPY --from=build-api /prod/api /app
