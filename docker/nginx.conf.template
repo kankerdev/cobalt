@@ -22,7 +22,7 @@ http {
 
     server {
         listen 80;
-        server_name ${WEB_HOST};
+        server_name ${SERVER_NAME};
 
         root /usr/share/nginx/html;
 
