@@ -43,7 +43,16 @@ RUN pnpm run -r build
 
 
 FROM nginx:alpine-slim AS web
+ENV WEB_HOST=${WEB_HOST:-cobalt.kanker.dev}
+
+RUN apk add --no-cache gettext
+
+COPY docker/nginx.conf.template /etc/nginx/nginx.conf.template
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 COPY --from=build-web /app/web/build /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 80/tcp
+
+ENTRYPOINT [ "/entrypoint.sh" ]

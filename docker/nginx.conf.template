@@ -1,0 +1,35 @@
+user nginx;
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    sendfile on;
+    keepalive_timeout 65;
+
+    # Don't expose NGINX version
+    server_tokens off;
+
+    # Tell the browser to view unknown mime-types as plaintext,
+    default_type text/plain;
+
+    # Don't keep logs
+    access_log /dev/null;
+    error_log /dev/null;
+
+    server {
+        listen 80;
+        server_name ${WEB_HOST};
+
+        root /usr/share/nginx/html;
+
+        location / {
+            try_files $uri $uri/ /index.html
+        }
+
+        error_page 404 /index.html;
+    }
+}
