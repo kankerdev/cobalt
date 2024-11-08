@@ -13,8 +13,7 @@ http {
     # Don't expose NGINX version
     server_tokens off;
 
-    # Tell the browser to view unknown mime-types as plaintext,
-    default_type text/plain;
+    default_type application/octet-stream;
 
     # Don't keep logs
     access_log /dev/null;
