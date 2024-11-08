@@ -43,7 +43,8 @@ RUN pnpm run -r build
 
 
 FROM nginx:alpine-slim AS web
-ENV WEB_HOST=${WEB_HOST:-cobalt.kanker.dev}
+ARG WEB_HOST
+ENV SERVER_NAME=${WEB_HOST:-cobalt.kanker.dev}
 
 RUN apk add --no-cache gettext
 
