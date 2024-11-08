@@ -13,8 +13,6 @@ http {
     # Don't expose NGINX version
     server_tokens off;
 
-    default_type application/octet-stream;
-
     # Don't keep logs
     access_log /dev/null;
     error_log /dev/null;
